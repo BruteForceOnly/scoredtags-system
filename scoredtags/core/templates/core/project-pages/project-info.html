@@ -1,0 +1,361 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+
+{% block title %}
+    PROJECT: {{ project.shareddata.main_name }}
+{% endblock title %}
+
+
+{% block main_content %}
+    {# DEBUG: number of db hits #}
+    <p>pre-main_content-template db hits: {{ connection.queries|length }}</p>
+
+
+    <h1>{{ project.shareddata.main_name }}</h1>
+
+    <div>
+        {% with anlist_vars=altnames_anlist_vars %}
+        {% include "core/reusable/swaps/alternative-names-data.html" %}
+        {% endwith %}
+        <a href="javascript:void(0)" id="show-hide-more-altnames" 
+        onclick="showHideMoreAltnames()">show more</a>
+        <span class="inline-add-altname-button-wrapper">
+            {% with vars=altnames_add_altname_btn_vars %}
+            {% include "core/reusable/add-new-item-ui.html" %}
+            {% endwith %}
+        </span>
+        {% with message_list_id="message-list-"|add:altnames_add_altname_btn_vars.uid %}
+        {% include "core/reusable/message-list.html" %}
+        {% endwith %}
+    </div>
+
+    <div class="profile-info">
+        <span class="editable-container">
+            <img src="{% static 'core/temp.png' %}">
+        </span>
+        <span class="profile-info-section">
+            <table>
+                <tr class="editable">
+                    <td>Overall Score:</td>
+                    <td>
+                        <span id="overall-score-data">
+                        {{ project.overall_score }}
+                        </span>
+                        <div class="loader-boundary-element">
+                        {% with message_list_id="message-list-oscore" %}
+                        {% include "core/reusable/select-overall-user-score-ui.html" %}
+                        {% endwith %}
+                        </div>
+                        <button id="add-user-score-button" 
+                        onclick="relatedUIShowHide('select-overall-user-score', 'inline-flex', 
+                        'add-user-score-button')">+ Add User Score</button>
+                        {% with message_list_id="message-list-oscore" %}
+                        {% include "core/reusable/message-list.html" %}
+                        {% endwith %}
+                    </td>
+                </tr>
+                <tr class="editable">
+                    <td>Main Creators:</td>
+                    <td>
+                        <span id="main-creators-data">
+                        {% for creator in project.creators.all %}
+                            {% if creator == last_creator %}
+                            <a href="{% url 'core:creator_info' creator.pk %}">{{ creator.shareddata.main_name }}</a>
+                            {% else %}
+                            <a href="{% url 'core:creator_info' creator.pk %}">{{ creator.shareddata.main_name }}</a>, 
+                            {% endif %}
+                        {% empty %}
+                            <em>none</em>
+                        {% endfor %}
+                        </span>
+                        <button onclick="document.getElementById('all-creators-data').scrollIntoView()">
+                            edit
+                        </button>
+                    </td>
+                </tr>
+                <tr class="editable">
+                    <td>Release Date:</td>
+                    <td>
+                        <span id="rdate-data">
+                        {{ project.release_date }}
+                        </span>
+                        <button id="rdate-edit-button"
+                        onclick="showTableRow('hidden-rdate-input'); hideElement('rdate-edit-button')">
+                            edit
+                        </button>
+                        {% with message_list_id="message-list-rdate" %}
+                        {% include "core/reusable/message-list.html" %}
+                        {% endwith %}
+                    </td>
+                </tr>
+                <tr id="hidden-rdate-input" hidden>
+                    <td></td>
+                    <td>
+                        {% with eddata_vars=profile_rdate_edit_date_ui_vars %}
+                        {% include "core/reusable/edit-date-ui.html" %}
+                        {% endwith %}
+                    </td>
+                </tr>
+                <tr class="editable">
+                    <td>Last Update:</td>
+                    <td>
+                        <span id="ludate-data">
+                        {{ project.last_update_date }}
+                        </span>
+                        <button id="ludate-edit-button"
+                        onclick="showTableRow('hidden-ludate-input'); hideElement('ludate-edit-button')">
+                            edit
+                        </button>
+                        {% with message_list_id="message-list-ludate" %}
+                        {% include "core/reusable/message-list.html" %}
+                        {% endwith %}
+                    </td>
+                </tr>
+                <tr id="hidden-ludate-input" hidden>
+                    <td></td>
+                    <td>
+                        {% with eddata_vars=profile_ludate_edit_date_ui_vars %}
+                        {% include "core/reusable/edit-date-ui.html" %}
+                        {% endwith %}
+                    </td>
+                </tr>
+                <tr class="editable">
+                    <td>Marked As:</td>
+                    <td>
+                        <span class="loader-boundary-element">
+                        {% with sdtype_data_vars=profile_sdtype_data_vars %}
+                        {% include "core/reusable/swaps/profile-shareddata-types-data.html" %}
+                        {% endwith %}
+                        {% with sdtype_ui_vars=profile_sdtype_ui_vars %}
+                        {% include "core/reusable/edit-shareddata-type-ui.html" %}
+                        {% endwith %}
+                        </span>
+                        <button id="add-edit-sdata-button"
+                        onclick="hideElement(this.id);
+                        showAllElementsWithClass('shareddata-type-edit-ui', 'initial'); 
+                        showAllElementsWithClass('shareddata-type-unset', 'inline-block')">
+                            + add/edit
+                        </button>
+                        {% with message_list_id="message-list-marked-as-type" %}
+                        {% include "core/reusable/message-list.html" %}
+                        {% endwith %}
+                    </td>
+                </tr>
+            </table>
+        </span>
+
+        <span id="related-pages-data" class="profile-info-section">
+            {% if project.shareddata.linked_creator or project.shareddata.linked_tag %}
+            <div><b>Related Pages:</b></div>
+            <div>
+                {% if project.shareddata.linked_creator %}
+                <a href="{% url 'core:creator_info' project.pk %}">
+                    (Creator Page) {{ project.shareddata.main_name }}
+                </a>
+                <br>
+                {% endif %}
+                {% if project.shareddata.linked_tag %}
+                <a href="{% url 'core:tag_info' project.pk %}">
+                    (Tag Page) {{ project.shareddata.main_name }}
+                </a>
+                <br>
+                {% endif %}
+                {% if not project.shareddata.linked_tag and not project.shareddata.linked_creator %}
+                <em>No related pages</em>
+                {% endif %}
+            </div>
+            {% endif %}
+        </span>
+    </div>
+
+    <h3>Content Tags</h3>
+    <div id="tab-group-content-tags" class="tabs-container">
+        <div class="tabs">
+            <button class="tab-button active-tab" 
+            onclick="setActiveTab(this, 'top-rated-tags', 'tab-group-content-tags')">
+                Top-Rated
+            </button>
+            <button class="tab-button" 
+            onclick="setActiveTab(this, 'most-relevant-tags', 'tab-group-content-tags')">
+                Most Relevant
+            </button>
+            <button class="tab-button" id="all-tags-tab-button"
+            onclick="setActiveTab(this, 'all-tags', 'tab-group-content-tags')">
+                All
+            </button>
+        </div>
+
+        <div id="top-rated-tags" class="tab-content active-tab">
+            <ul class="tags-list tags-list-type-tags">
+                {% for tag in project.tags.all %}
+                <li>
+                    <span class="tag-item-left">9.7</span>
+                    <a href="{% url 'core:tag_info' tag.pk %}">{{ tag.shareddata.main_name }}</a>
+                    <span class="tag-item-right">74|26</span>
+                </li>
+                {% empty %}
+                <p><em>No tags currently added</em></p>
+                {% endfor %}
+            </ul>
+            <p>
+                You can 
+                <a href="javascript:void(0)" 
+                onclick="setActiveTab(
+                    document.getElementById('all-tags-tab-button'), 'all-tags', 'tab-group-content-tags'
+                )">add tags</a> 
+                in the "All" tab.
+            </p>
+        </div>
+        <div id="most-relevant-tags" class="tab-content">
+            <ul class="tags-list tags-list-type-tags">
+                {% for tag in project.tags.all %}
+                <li>
+                    <span class="tag-item-left">7.4</span>
+                    <a href="{% url 'core:tag_info' tag.pk %}">{{ tag.shareddata.main_name }}</a>
+                    <span class="tag-item-right">88|12</span>
+                </li>
+                {% empty %}
+                <p><em>No tags currently added</em></p>
+                {% endfor %}
+            </ul>
+            <p>
+                You can 
+                <a href="javascript:void(0)" 
+                onclick="setActiveTab(
+                    document.getElementById('all-tags-tab-button'), 'all-tags', 'tab-group-content-tags'
+                )">add tags</a> 
+                in the "All" tab.
+            </p>
+        </div>
+        <div id="all-tags" class="tab-content">
+            <input type="text" placeholder="filter" name="search" hx-trigger="input changed delay:500ms" 
+            hx-get="{% url 'core:project_info_search_tags' project.pk %}" hx-target="#swappable-tags-list-data"
+            hx-vals='js:{
+                includeaddtagbutton: "true", 
+                sortby: getSearchSelectedOptionValue("all-tags-sort-options")
+            }' id="all-tags-search-input">
+            <button>&#128269;&#xFE0E;</button>
+            <span>Sort By:</span>
+            <select id="all-tags-sort-options"
+            hx-get="{% url 'core:project_info_search_tags' project.pk %}" hx-target="#swappable-tags-list-data"
+            hx-vals='js:{
+                includeaddtagbutton: "true", 
+                search: getSearchInputValue("all-tags-search-input"),
+                sortby: getSearchSelectedOptionValue("all-tags-sort-options")
+            }'>
+                <option value="rating">Rating</option>
+                <option value="relevance">Upvotes</option>
+                <option value="name">Name</option>
+            </select>
+
+            <ul class="tags-list tags-list-type-tags">
+                <div id="swappable-tags-list-data">
+                {% with tlist_vars=alltags_tlist_vars %}
+                {% include "core/reusable/swaps/tags-list-data.html" %}
+                {% endwith %}
+                </div>
+                <li>
+                {% with vars=alltags_add_tag_ss_vars %}
+                {% include "core/reusable/add-item-search-select-ui.html" %}
+                {% endwith %}
+                </li>
+                <span>
+                {% with message_list_id="message-list-"|add:alltags_add_tag_ss_vars.uid %}
+                {% include "core/reusable/message-list.html" %}
+                {% endwith %}
+                </span>
+            </ul>
+        </div>
+    </div>
+
+    <h3>Related Projects (Official)</h3>
+    <div id="tab-group-related-projects" class="tabs-container">
+        <div class="tabs">
+            <button class="tab-button active-tab" 
+            {# hx-get="{% url 'core:project_info_series_tab' project.pk %}" hx-target="#prequel-projects" #}
+            onclick="setActiveTab(this, 'prequel-projects', 'tab-group-related-projects', '', 'series-edit')">
+                Prequels
+            </button>
+            <button class="tab-button" 
+            {# hx-get="{% url 'core:project_info_series_tab' project.pk %}" hx-target="#sequel-projects" #}
+            onclick="setActiveTab(this, 'sequel-projects', 'tab-group-related-projects', '', 'series-edit')">
+                Sequels
+            </button>
+            <button class="tab-button" 
+            onclick="setActiveTab(this, 'other-projects', 'tab-group-related-projects', 'series-edit', '')">
+                Other
+            </button>
+        </div>
+        
+        <div id="prequel-projects" class="tab-content active-tab">
+            <div id="prequel-projects-data">
+                {% with pseries_data_vars=prequel_pseries_data_vars %}
+                {% include "core/project-pages/swaps/project-info-series-data.html" %}
+                {% endwith %}
+            </div>
+        </div>
+        <div id="sequel-projects" class="tab-content">
+            <div id="sequel-projects-data">
+                {% with pseries_data_vars=sequel_pseries_data_vars %}
+                {% include "core/project-pages/swaps/project-info-series-data.html" %}
+                {% endwith %}
+            </div>
+        </div>
+        <div id="series-edit">
+            {% with vars=preseq_add_series_ss_vars %}
+            {% with message_list_id="message-list-"|add:vars.uid %}
+            {% include "core/reusable/add-item-search-select.html" %}
+            {% endwith %}
+            {% endwith %}
+            <div id="series-edit-preview"></div>
+        </div>
+        <div id="other-projects" class="tab-content">
+            <div id="other-projects-data">
+                {% with pdata_vars=other_pdata_vars %}
+                {% include "core/project-pages/swaps/project-info-other-related-projects-data.html" %}
+                {% endwith %}
+            </div>
+            {% with vars=other_add_project_ss_vars %}
+            {% with message_list_id="message-list-"|add:vars.uid %}
+            {% include "core/reusable/add-item-search-select.html" %}
+            {% endwith %}
+            {% endwith %}
+        </div>
+    </div>
+
+    <h3>Created By</h3>
+    <div>
+        <ul id="all-creators-data">
+        {% with clist_vars=createdby_clist_vars %}
+        {% include "core/reusable/swaps/creators-list-data.html" %}
+        {% endwith %}
+        </ul>
+    </div>
+    {% with vars=createdby_add_creator_ss_vars %}
+    {% with message_list_id="message-list-"|add:vars.uid %}
+    {% include "core/reusable/add-item-search-select.html" %}
+    {% endwith %}
+    {% endwith %}
+
+    <h3>Featured/Appears in Works by (Official & Unofficial)</h3>
+    <ul id="content-creators-data" class="tags-list tags-list-type-creators">
+        {% with content_creators=project.get_content_creators %}
+        {% for creator in content_creators %}
+        <li><a href="{% url 'core:creator_info' creator.pk %}">{{ creator.shareddata.main_name }}</a></li>
+        {% empty %}
+        <p><em>No listed creators making works featuring {{ project.shareddata.main_name }}</em></p>
+        {% endfor %}
+        {% endwith %}
+    </ul>
+    {% with vars=featuredin_add_creator_ss_vars %}
+    {% with message_list_id="message-list-"|add:vars.uid %}
+    {% include "core/reusable/add-item-search-select.html" %}
+    {% endwith %}
+    {% endwith %}
+    
+
+
+    {# DEBUG: number of db hits #}
+    <p>post template db hits: {{ connection.queries|length }}</p>
+{% endblock main_content %}

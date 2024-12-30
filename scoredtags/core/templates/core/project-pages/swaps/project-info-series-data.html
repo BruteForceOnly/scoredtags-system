@@ -1,0 +1,87 @@
+{% load static %}
+
+
+{% for series in pseries_data_vars.series_data %}
+<div class="series-table-data">
+    <table>
+        <caption>{{ series.name }}</caption>
+        {% with series_entries=series.projectseriesentry_set.all|dictsort:"order_num" %}
+        {% with first_entry=series_entries|first last_entry=series_entries|last %}
+
+        {% if pseries_data_vars.tab_id == "prequel-projects-data" and first_entry.order_num != series.proj_order_num or pseries_data_vars.tab_id == "sequel-projects-data" and last_entry.order_num != series.proj_order_num %}
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Creator</th>
+            <th>Release Date</th>
+        </tr>
+        {% endif %}
+        {% for entry in series_entries %}
+        {% if entry.order_num != first_entry.DEFAULT_ORDER_NUM %}
+        {% if pseries_data_vars.tab_id == "prequel-projects-data" and entry.order_num < series.proj_order_num or pseries_data_vars.tab_id == "sequel-projects-data" and entry.order_num > series.proj_order_num %}
+        <tr>
+            <td><img src="{% static 'core/logo.png' %}"></td>
+            <td>
+                <a href="{% url 'core:project_info' entry.project.pk %}">
+                    {{ entry.project.shareddata.main_name }}
+                </a>
+            </td>
+            <td>{{ entry.project.creators.all.0.shareddata.main_name }}</td>
+            <td>{{ entry.project.release_date }}</td>
+        </tr>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+
+        {# (maybe??) change this to last_entry if you make default=1024 #}
+        {% if first_entry.order_num == first_entry.DEFAULT_ORDER_NUM %}
+        <tr >
+            <td class="series-table-unknown-order-divider"></td>
+            <td class="series-table-unknown-order-divider">(Order Unknown)</td>
+            <td class="series-table-unknown-order-divider"></td>
+            <td class="series-table-unknown-order-divider"></td>
+        </tr>
+        {% for entry in series_entries %}
+        {% if entry.order_num == entry.DEFAULT_ORDER_NUM %}
+        <tr>
+            <td><img src="{% static 'core/logo.png' %}"></td>
+            <td>
+                <a href="{% url 'core:project_info' entry.project.pk %}">
+                    {{ entry.project.shareddata.main_name }}
+                </a>
+            </td>
+            <td>{{ entry.project.creators.all.0.shareddata.main_name }}</td>
+            <td>{{ entry.project.release_date }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+
+        {% endwith %}
+        {% endwith %}
+    </table>
+</div>
+{% empty %}
+<p><em>No series added</em></p>
+{% endfor %}
+
+
+
+
+{# OOB swaps #}
+{% if pseries_data_vars.series_updated %}
+
+
+{# swap (clear) the preview #}
+<div id="series-edit-preview" hx-swap-oob="true"></div>
+
+{# swap the other tab's table data #}
+{# careful of recursion when you change this #}
+<div id="{{ opposite_pseries_data_vars.tab_id }}" hx-swap-oob="true">
+    {% with pseries_data_vars=opposite_pseries_data_vars %}
+    {% include "core/project-pages/swaps/project-info-series-data.html" %}
+    {% endwith %}
+</div>
+
+
+{% endif %}

@@ -1,0 +1,87 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+
+{% block title %}
+Project Library
+{% endblock title %}
+
+
+{% block main_content %}
+
+<h1>Project Library</h1>
+
+<div class="library-quick-filter">
+    <div id="quick-filter-sort" class="library-quick-filter-item">
+        <span>Sort By:</span>
+        <select name="sortby" id="library-sortby-name" hx-get="{% url 'core:project_library' %}" 
+        hx-push-url="true" hx-swap="outerHTML" hx-target="#library-table-data" 
+        hx-indicator="#table-loading-indicator" 
+        hx-on::before-request="hideErrorElement('library-search-sort-errors')" 
+        hx-vals="js:{page: '1', search: getSearchParam('search')}">
+            <option value="name">Name</option>
+            <option value="date" {% if params.sortby == "date" %} selected {% endif %}>Date Added</option>
+            <option value="name">Release Date</option>
+            <option value="name">Last Updated</option>
+        </select>
+    </div>
+</div>
+
+<div class="error-display" id="library-search-sort-errors">
+    <p>Error: Placeholder</p>
+</div>
+
+<div id="library-table">
+    <div id="table-loading-indicator" class="htmx-indicator loader-container">
+        <img src="{% static 'core/loading.jpg' %}">
+            <div class="loader-evil-focus"></div>
+        </img>
+    </div>
+
+    <div id="library-table-search">
+        <input type="search" name="search" placeholder="search for term" id="library-searchbar" 
+        hx-get="{% url 'core:project_library' %}" hx-trigger="input changed delay:500ms, search" 
+        hx-target="#library-table-data" hx-push-url="true" value="{{ params.search }}" hx-swap="outerHTML"
+        hx-vals="js:{page: '1', sortby: getSearchParam('sortby')}" hx-indicator="#table-loading-indicator" 
+        hx-on::before-request="hideErrorElement('library-search-sort-errors')">
+        <button>&#128269;&#xFE0E;</button>
+    </div>
+
+    <table class="project-library-table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Tags</th>
+            <th>Creators</th>
+            <th>Release</th>
+            <th>Updated</th>
+        </tr>
+        </thead>
+        
+        {% include "core/project-pages/swaps/project-library-table-data.html" %}
+        
+        <tr>
+            <td colspan=6>
+                {% with vars=add_button_vars_1 %}
+                {% with message_list_id="message-list-"|add:vars.uid %}
+                {% include "core/reusable/add-new-item-ui.html" %}
+                {% include "core/reusable/message-list.html" %}
+                {% endwith %}
+                {% endwith %}
+            </td>
+        </tr>
+    </table>
+    
+    {% with named_url_str="core:project_library" %}
+    {% include "core/reusable/swaps/library-table-navbar.html" %}
+    {% endwith %}
+    
+    <div class="error-display" id="library-paging-errors">
+        <p>Error: Placeholder</p>
+    </div>
+</div>
+
+<div><p>If something isn't in the database, <a href="javascript:void(0)">add it.</a></p></div>
+
+{% endblock main_content %}

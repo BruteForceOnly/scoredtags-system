@@ -1,0 +1,29 @@
+<span id="select-overall-user-score" class="initially-no-display">
+    <select id="overall-score-select">
+        <option value="10">10</option>
+        <option value="9">9</option>
+        <option value="8">8</option>
+        <option value="7">7</option>
+        <option value="6">6</option>
+        <option value="5">5</option>
+        <option value="4">4</option>
+        <option value="3">3</option>
+        <option value="2">2</option>
+        <option value="1">1</option>
+    </select>
+    <button class="confirm-button" hx-post="{% url 'core:project_info_vote_overall_score' project.pk %}"
+    hx-vals="js:{newscorevalue: getSelectedOptionValue('overall-score-select'), 
+    csrfmiddlewaretoken: get_csrf_token()}" hx-indicator="#oscore-loader" 
+    hx-on::before-request="clearMessageList( '{{ message_list_id }}' )" 
+    hx-on::after-request="relatedUIShowHide('add-user-score-button', 'initial', 'select-overall-user-score')"
+    hx-target="#overall-score-data" id="select-overall-user-score-confirm" hx-disabled-elt="this">
+        &#x2713;
+    </button>
+    <button class="cancel-button" 
+    onclick="relatedUIShowHide('add-user-score-button', 'initial', 'select-overall-user-score')">
+        &#x2715;
+    </button>
+    <div id="oscore-loader" class="loader-container htmx-indicator">
+        <div class="loader"></div>
+    </div>
+</span>

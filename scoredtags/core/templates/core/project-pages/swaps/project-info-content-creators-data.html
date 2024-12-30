@@ -1,0 +1,17 @@
+{% with content_creators=project.get_content_creators %}
+{% for creator in content_creators %}
+<li><a href="{% url 'core:creator_info' creator.pk %}">{{ creator.shareddata.main_name }}</a></li>
+{% empty %}
+<p><em>No listed creators making works featuring {{ project.shareddata.main_name }}</em></p>
+{% endfor %}
+{% endwith %}
+
+
+
+
+{# OOB swap for if linked_tag is created #}
+{% if profile_info_update_required %}
+
+{% include "core/reusable/swaps/profile-shareddata-types-data.html" %}
+
+{% endif %}

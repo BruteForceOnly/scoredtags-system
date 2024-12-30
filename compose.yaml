@@ -1,0 +1,54 @@
+services:
+  database-postgres:
+    build:
+      context: ./postgres
+    volumes:
+      - pg-data-vol:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER_FILE: /run/secrets/db_user
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_pw
+      POSTGRES_DB_FILE: /run/secrets/db_name
+    secrets:
+      - db_user
+      - db_pw
+      - db_name
+  webserver-gunicorn:
+    build:
+      context: ./scoredtags
+    volumes:
+      - public-site-files:/staticfiles
+      - peppers:/ppprs:ro
+    secrets:
+      - db_user
+      - db_pw
+      - db_name
+  rproxy-nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - public-site-files:/staticfiles
+  admin-cron:
+    build:
+      context: .
+      dockerfile: ./cron/cron.Dockerfile
+    volumes:
+      - peppers:/ppprs
+    secrets:
+      - db_user
+      - db_pw
+      - db_name
+
+volumes:
+  pg-data-vol:
+  public-site-files:
+  peppers:
+
+secrets:
+  db_user:
+    file: ./_secrets/pg-user.txt
+  db_pw:
+    file: ./_secrets/pg-pass.txt
+  db_name:
+    file: ./_secrets/pg-db.txt

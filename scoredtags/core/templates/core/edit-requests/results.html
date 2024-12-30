@@ -1,0 +1,20 @@
+{% extends "core/base.html" %}
+
+
+{% block title %}
+    ???
+{% endblock title %}
+
+
+{% block main_content %}
+    <h1>{{ editreq.title }}</h1>
+    <p>{{ editreq.description }}</p>
+
+    <ul>
+    {% for comment in editreq.editrequestcomment_set.all %}
+        <li>{{ comment.pro_con_text }} -- {{ comment.upvotes }} vote{{ comment.upvotes|pluralize }}</li>
+    {% endfor %}    
+    </ul>
+
+    <a href="{% url 'core:er_detail' editreq.id %}">Vote again?</a>
+{% endblock main_content %}

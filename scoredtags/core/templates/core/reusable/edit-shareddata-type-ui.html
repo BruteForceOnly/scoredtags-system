@@ -1,0 +1,27 @@
+<span class="shareddata-type-edit-ui">
+    <div class="shareddata-type-edit-ui-btn-container">
+        <button class="confirm-button" hx-post="{{ sdtype_ui_vars.url_endpoint }}" hx-swap="outerHTML"
+        hx-target="{{ sdtype_ui_vars.hx_swap_target }}" id="edit-sdtype-confirm"
+        hx-vals="js:{'csrfmiddlewaretoken': get_csrf_token()}" hx-include="input.shareddata-type-edit-ui"
+        hx-disabled-elt="this" hx-indicator="#sdtype-loader"
+        hx-on::before-request="clearMessageList('message-list-marked-as-type')"
+        hx-on::after-request="showElement('add-edit-sdata-button'); 
+        hideAllElementsWithClass('shareddata-type-edit-ui');
+        if(event.detail.successful){
+            pushMessageListItem('message-list-marked-as-type', 'success', 'Types Submitted');
+        }else{
+            hideAllElementsWithClass('shareddata-type-unset');
+        }">
+            &#x2713;
+        </button>
+        <button class="cancel-button"
+        onclick="showElement('add-edit-sdata-button');
+        hideAllElementsWithClass('shareddata-type-edit-ui'); 
+        hideAllElementsWithClass('shareddata-type-unset')">
+            &#x2715;
+        </button>
+    </div>
+    <div id="sdtype-loader" class="loader-container htmx-indicator">
+        <div class="loader"></div>
+    </div>
+</span>

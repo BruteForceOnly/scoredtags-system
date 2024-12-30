@@ -1,0 +1,1 @@
+0 0 15 * * root /usr/local/bin/python /scripts/generate-pepper.py -nm > /proc/1/fd/1

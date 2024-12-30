@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+
+
+{% block title %}
+    Edit Requests
+{% endblock title %}
+
+
+{% block main_content %}
+    {% if latest_editreq_list %}
+        <ul>
+        {% for edit_request in latest_editreq_list %}
+            <li><a href="{% url 'core:er_detail' edit_request.id %}">{{ edit_request.title }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No Edit Requests are available.</p>
+    {% endif %}
+{% endblock main_content %}

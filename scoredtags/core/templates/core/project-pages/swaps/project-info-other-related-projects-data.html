@@ -1,0 +1,23 @@
+{% load static %}
+
+
+{% if pdata_vars.matching_projects|length > 0 %}
+<table>
+    <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Creator</th>
+        <th>Release Date</th>
+    </tr>
+    {% for item in pdata_vars.matching_projects %}
+    <tr>
+        <td><img src="{% static 'core/logo.png' %}"></td>
+        <td><a href="{% url 'core:project_info' item.pk %}">{{ item.shareddata.main_name }}</a></td>
+        <td>{{ item.creators.all.0.shareddata.main_name }}</td>
+        <td>{{ item.release_date }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p><em>No related projects in "other"</em></p>
+{% endif %}

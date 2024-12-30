@@ -1,0 +1,4 @@
+/_secrets/
+
+/scoredtags/db.sqlite3
+/scoredtags/**/__pycache__/

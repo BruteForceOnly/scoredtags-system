@@ -1,0 +1,31 @@
+<div class="edit-date-container loader-boundary-element">
+    <input name="newdatevalue" type="date" id="edit-date-input-{{ eddata_vars.uid }}">
+    <button class="confirm-button" hx-post="{{ eddata_vars.url_endpoint }}" 
+    hx-include="previous [name='newdatevalue']" hx-target="{{ eddata_vars.hx_swap_target }}" 
+    hx-vals="js:{csrfmiddlewaretoken: get_csrf_token()}" id="edit-date-confirm-{{ eddata_vars.uid }}"
+    hx-disabled-elt="this" hx-indicator="next .loader-container"
+    hx-on::before-request="clearMessageList('{{ eddata_vars.message_list_id }}')" 
+    hx-on::after-request="hideTableRow('{{ eddata_vars.my_tr_id }}');
+    if('{{ eddata_vars.hx_swap_target }}' == '#rdate-data') {
+        showElement('rdate-edit-button');
+    }else if('{{ eddata_vars.hx_swap_target }}' == '#ludate-data'){
+        showElement('ludate-edit-button');
+    }
+    if(event.detail.successful){
+        pushMessageListItem('{{ eddata_vars.message_list_id }}', 'success', 'Date Submitted')
+    }">
+        &#x2713;
+    </button>
+    <button class="cancel-button" 
+    onclick="hideTableRow('{{ eddata_vars.my_tr_id }}'); 
+    if('{{ eddata_vars.hx_swap_target }}' == '#rdate-data') {
+        showElement('rdate-edit-button');
+    } else if ('{{ eddata_vars.hx_swap_target }}' == '#ludate-data'){
+        showElement('ludate-edit-button');
+    }">
+        &#x2715;
+    </button>
+    <div class="loader-container htmx-indicator">
+        <div class="loader"></div>
+    </div>
+</div>

@@ -1,0 +1,93 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Tag Library
+{% endblock title %}
+
+
+{% block main_content %}
+    <h1>Tag Library</h1>
+
+    <details>
+        <summary class="library-search-options">Search Options</summary>
+        <h2>Status</h2>
+        <div id="search-status-selection">
+            <input type="checkbox">
+            <label>Approved</label>
+            <input type="checkbox">
+            <label>Pending</label>
+            <input type="checkbox">
+            <label>Rejected</label>
+        </div>
+        <h2>Something Else</h2>
+        <div id="search-test-selection">
+            <input type="checkbox">
+            <label>Thing 1</label>
+            <input type="checkbox">
+            <label>Thing 2</label>
+        </div>
+    </details>
+
+    <div class="library-quick-filter">
+        <div id="quick-filter-sort" class="library-quick-filter-item">
+            <span>Sort By:</span>
+            <select name="sortby" hx-get="/tags/" hx-swap="outerHTML" hx-target="#library-table-data" 
+            hx-push-url="true" hx-indicator="#table-loading-indicator" id="library-sortby-name" 
+            hx-on::before-request="hideErrorElement('library-search-sort-errors')" 
+            hx-vals="js:{page: '1', search: getSearchParam('search')}">
+                {% if params.sortby == "date" %}
+                <option value="name">Name</option>
+                <option value="date" selected>Date Added</option>
+                {% else %}
+                <option value="name" selected>Name</option>
+                <option value="date">Date Added</option>
+                {%  endif %}
+            </select>
+        </div>
+    </div>
+
+    <div class="error-display" id="library-search-sort-errors">
+        <p>Error: Placeholder</p>
+    </div>
+
+    <div id="library-table">
+        <div id="table-loading-indicator" class="htmx-indicator loader-container">
+            <img src="{% static 'core/loading.jpg' %}">
+                <div class="loader-evil-focus"></div>
+            </img>
+        </div>
+
+        <div id="library-table-search">
+            <input type="search" name="search" placeholder="search for term" hx-get="/tags/" 
+            hx-swap="outerHTML" hx-trigger="input changed delay:500ms, search" id="library-searchbar" 
+            hx-target="#library-table-data" hx-push-url="true" value="{{ params.search }}"
+            hx-vals="js:{page: '1', sortby: getSearchParam('sortby')}" hx-indicator="#table-loading-indicator" 
+            hx-on::before-request="hideErrorElement('library-search-sort-errors')">
+            <button>&#128269;&#xFE0E;</button>
+        </div>
+
+        {% include "core/tag-pages/swaps/tag-library-table-data.html" %}
+
+        <div class="library-table-items-next-sibling">
+        {% with vars=add_button_vars_1 %}
+        {% with message_list_id="message-list-"|add:vars.uid %}
+        {% include "core/reusable/add-new-item-ui.html" %}
+        {% include "core/reusable/message-list.html" %}
+        {% endwith %}
+        {% endwith %}
+        </div>
+
+        {% with named_url_str="core:tag_library" %}
+        {% include "core/reusable/swaps/library-table-navbar.html" %}
+        {% endwith %}
+
+        <div class="error-display" id="library-paging-errors">
+            <p>Error: Placeholder</p>
+        </div>        
+    </div>
+    
+    <div>If something isn't in the database, <a href="javascript:void(0)">add it.</a></div>
+
+{% endblock main_content %}

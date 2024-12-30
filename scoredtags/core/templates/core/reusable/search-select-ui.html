@@ -1,0 +1,14 @@
+<div class="search-select-container">
+    <input id="search-select-input-{{ vars.uid }}" type="search" name="search" 
+    placeholder="{{ vars.placeholder_text }}" hx-trigger="input changed delay:500ms" 
+    hx-get="/search-results/" hx-target="#search-results-list-{{ vars.uid }}" hx-swap="outerHTML" 
+    hx-vals='{"searchtype": "{{ vars.search_item_type }}", "resultstype": "{{ vars.search_results_type }}"}'>
+    <div class="search-results-dropdown">
+        <ul id="search-results-list-{{ vars.uid }}">
+            {% if vars.last_list_item %}
+            <li><em>{{ vars.last_list_item }}</em></li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+<button>&#128269;&#xFE0E;</button>

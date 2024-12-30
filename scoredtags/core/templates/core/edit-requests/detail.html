@@ -1,0 +1,44 @@
+{% extends "core/base.html" %}
+
+
+{% block title %}
+    Edit Request #{{ editreq.id }} - {{ editreq.title }}
+{% endblock title %}
+
+
+{% block main_content %}
+    <h2>{{ editreq.title }}</h2>
+    <p>{{ editreq.description }}</p>
+
+    <ul>
+    {% for mycomment in editreq.editrequestcomment_set.all %}
+        <li>
+            {% if mycomment.pro_con_type == 1 %}
+                PRO: {{ mycomment.pro_con_text }}
+            {% elif mycomment.pro_con_type == -1 %}
+                CON: {{ mycomment.pro_con_text }}
+            {% else %}
+                other: {{ mycomment.pro_con_text }} 
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+
+    <form action="{% url 'core:er_vote' editreq.id %}" method="post">
+        {% csrf_token %}
+        <fieldset>
+            <legend><h1>Do you agree/disagree with the following?</h1></legend>
+            {% if error_message %}
+                <p><strong>{{ error_message }}</strong></p>
+            {% endif %}
+            {% for comment in editreq.editrequestcomment_set.all %}
+                <p>{{ comment.pro_con_text }}</p>
+                <input type="radio" name="pro_con{{ comment.id }}" id="agree{{ forloop.counter }}" value="agree">
+                <label for="agree{{ forloop.counter }}">Agree</label>
+                <input type="radio" name="pro_con{{ comment.id }}" id="disagree{{ forloop.counter }}" value="disagree">
+                <label for="disagree{{ forloop.counter }}">Disagree</label>
+            {% endfor %}
+        </fieldset>
+        <input type="submit" value="Vote">
+    </form>
+{% endblock main_content %}

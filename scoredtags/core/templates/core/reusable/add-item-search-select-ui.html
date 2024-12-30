@@ -1,0 +1,82 @@
+<div class="add-new-item-ss-container">
+    <button id="add-new-item-button-{{ vars.uid }}" 
+    onclick="relatedUIShowHide(
+        'add-item-search-select-{{ vars.uid }}', 
+        'flex', 
+        'add-new-item-button-{{ vars.uid }}'
+    )"
+    {% if vars.new_item_added is True %} style="display:none" {% endif %}>
+        {{ vars.button_text }}
+    </button>
+    <div id="add-item-search-select-{{ vars.uid }}"
+    {% if vars.new_item_added is True %} style="display:flex" {% else %} style="display:none" {% endif %}>
+        {% include "core/reusable/search-select-ui.html" %}
+        <button class="cancel-button" 
+        onclick="relatedUIShowHide(
+            'add-new-item-button-{{ vars.uid }}',
+            'block',
+            'add-item-search-select-{{ vars.uid }}'
+        )">
+            &#x2715;
+        </button>
+    </div>
+    <div id="add-new-item-input-wrapper-{{ vars.uid }}" class="add-new-item-input-wrapper">
+        <div id="new-item-loading-indicator-{{ vars.uid }}" class="htmx-indicator loader-container">
+            <div class="loader"></div>
+        </div>
+        <input id="new-item-name-input-{{ vars.uid }}" name="{{ vars.input_name }}" type="text" 
+        class="to-submit-{{ vars.uid }} new-item-name-input" maxlength="50" readonly>
+        <input id="selected-item-pk-input-{{ vars.uid }}" name="{{ vars.hidden_input_name }}" 
+        class="to-submit-{{ vars.uid }}" hidden readonly>
+        <div class="new-item-input-buttons">
+            <button id="add-new-item-confirm-{{ vars.uid }}" hx-post="{{ vars.url_endpoint }}" 
+            hx-target="{{ vars.hx_swap_target }}" 
+            {# hx-include="[name={{ vars.input_name }}], [name={{ vars.hidden_input_name }}]" #}
+            hx-include=".to-submit-{{ vars.uid }}"
+            
+            {# may need to make variables for parameters in functions #}
+            {% if vars.search_item_type == "tag" and vars.search_filter_sort is True %}
+            hx-vals="js:{
+                csrfmiddlewaretoken: get_csrf_token(), 
+                currsearch: getSearchInputValue('all-tags-search-input'), 
+                currsort: getSearchSelectedOptionValue('all-tags-sort-options')
+            }"
+            {% elif vars.search_item_type == "projectseries" %}
+            hx-vals="js:{
+                csrfmiddlewaretoken: get_csrf_token(), 
+                adjacententry: getSelectedSeriesOrderTargetData('entry', '{{ vars.uid }}'),
+                relativeposition: getSelectedSeriesOrderTargetData('position', '{{ vars.uid }}')
+            }"
+            {% else %}
+            hx-vals="js:{csrfmiddlewaretoken: get_csrf_token()}"
+            {% endif %}
+
+            hx-indicator="#new-item-loading-indicator-{{ vars.uid }}" hx-disabled-elt="this" 
+            hx-on::before-request="clearMessageList('message-list-{{ vars.uid }}');" 
+            hx-on::after-request="
+            if(event.detail.successful){
+                relatedUIShowHide(
+                'add-item-search-select-{{ vars.uid }}', 
+                'flex', 
+                'add-new-item-input-wrapper-{{ vars.uid }}'
+                );
+                /* clear input */
+                document.getElementById('search-select-input-{{ vars.uid }}').value='';
+                /* success message */
+                let addedItemName = getLockedInSearchSelectItemName('new-item-name-input-{{ vars.uid }}');
+                pushMessageListItem('message-list-{{ vars.uid }}', 'success', 'Submitted: '+addedItemName);
+            }"
+            class="confirm-button">
+                &#x2713;
+            </button>
+            <button class="cancel-button" 
+            onclick="relatedUIShowHide(
+                'add-item-search-select-{{ vars.uid }}', 
+                'flex', 
+                'add-new-item-input-wrapper-{{ vars.uid }}'
+            )">
+                &#x2715;
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+{% extends "core/base.html" %}
+
+
+{% block title %}
+    Page Content
+{% endblock title %}
+
+
+{% block main_content %}
+    <div>
+        {% if test_altnames|length == 0 %}
+        <em>No alternative names have been added</em>
+        {% elif test_altnames|length == 1 %}
+        {{ test_altnames.0.name }}
+        {% else %}
+        
+        {% for item in test_altnames %}
+            {% if item == test_altnames|last %}
+                {{ item.name }}
+            {% else %}
+                {{ item.name }},
+            {% endif %}
+        {% endfor%}
+
+        {% endif %}
+    </div>
+
+{% endblock main_content %}
+

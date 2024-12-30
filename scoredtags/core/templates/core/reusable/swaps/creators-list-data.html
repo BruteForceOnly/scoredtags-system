@@ -1,0 +1,28 @@
+{% if clist_vars.matching_creators|length > 0 %}
+    {% for creator in clist_vars.matching_creators %}
+    <li {# class="editable-container" #}>
+        <a href="{% url 'core:creator_info' creator.pk %}">{{ creator.shareddata.main_name }}</a>
+    </li>
+    {% endfor %}
+{% else %}
+<p><em>No creators currently added</em></p>
+{% endif %}
+
+
+
+
+{# OOB swaps #}
+{# project info main creators comma separated list #}
+{% if clist_vars.update_project_info_main_creators %}
+<span id="main-creators-data" hx-swap-oob="true">
+{% for creator in clist_vars.matching_creators %}
+    {% if creator == clist_vars.last_creator %}
+    <a href="{% url 'core:creator_info' creator.pk %}">{{ creator.shareddata.main_name }}</a>
+    {% else %}
+    <a href="{% url 'core:creator_info' creator.pk %}">{{ creator.shareddata.main_name }}</a>, 
+    {% endif %}
+{% empty %}
+    <em>none</em>
+{% endfor %}
+</span>
+{% endif %}

@@ -1,0 +1,30 @@
+<div id="swappable-altnames-list-data" class="altnames-list-data">
+    {% if anlist_vars.altnames_list|length == 0 %}
+        <em>No alternative names have been added</em>
+    {% elif anlist_vars.altnames_list|length == 1 %}
+        {{ anlist_vars.altnames_list.0.name }}
+    {% else %}
+
+    {% for item in anlist_vars.altnames_list %}
+    {% if item == anlist_vars.altnames_list|last %}
+        {{ item.name }}
+    {% else %}
+        {{ item.name }}, 
+    {% endif %}
+    {% endfor %}
+
+    {% endif %}
+</div>
+
+
+{# OOB swaps after successfully adding new altnames #}
+{% if anlist_vars.altname_added %}
+{# success message #}
+<div id="add-new-item-message-{{ anlist_vars.trigger_uid }}" hx-swap-oob="true">
+    <p class="success-message">Added: "{{ anlist_vars.added_altname }}"</p>
+</div>
+
+{# show/hide more button reset #}
+<a href="javascript:void(0)" id="show-hide-more-altnames" onclick="showHideMoreAltnames()" 
+hx-swap-oob="true">show more</a>
+{% endif %}

@@ -1,0 +1,100 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+
+{% block title %}
+    TAG: {{ tag.shareddata.main_name }}
+{% endblock title %}
+
+
+{% block main_content %}
+    {# DEBUG: number of db hits #}
+    <p>db hits: {{ connection.queries|length }}</p>
+
+
+    <h1>{{ tag.shareddata.main_name }}</h1>
+
+    <div>
+        {% with anlist_vars=altnames_anlist_vars %}
+        {% include "core/reusable/swaps/alternative-names-data.html" %}
+        {% endwith %}
+        <a href="javascript:void(0)" id="show-hide-more-altnames" 
+        onclick="showHideMoreAltnames()">show more</a>
+        <span class="inline-add-altname-button-wrapper">
+            {% with vars=altnames_add_altname_btn_vars %}
+            {% include "core/reusable/add-new-item-ui.html" %}
+            {% endwith %}
+        </span>
+        <span>
+            {% with message_list_id="message-list-"|add:altnames_add_altname_btn_vars.uid %}
+            {% include "core/reusable/message-list.html" %}
+            {% endwith %}
+        </span>
+    </div>
+
+    <div class="profile-info">
+        <span>
+            <img src="{% static 'core/temp.png' %}">
+        </span>
+        <span class="profile-info-section">
+            <table>
+                <caption><b>Tag Information</b></caption>
+                <tr><td>Name:</td><td>{{ tag.shareddata.main_name }}</td></tr>
+                <tr><td>Type:</td><td>{{ tag.tag_type.type_name }}</td></tr>
+                <tr class="editable">
+                    <td>Marked As:</td>
+                    <td>
+                        <span class="loader-boundary-element">
+                        {% with sdtype_data_vars=profile_sdtype_data_vars %}
+                        {% include "core/reusable/swaps/profile-shareddata-types-data.html" %}
+                        {% endwith %}
+                        {% with sdtype_ui_vars=profile_sdtype_ui_vars %}
+                        {% include "core/reusable/edit-shareddata-type-ui.html" %}
+                        {% endwith %}
+                        </span>
+                        <button id="add-edit-sdata-button"
+                        onclick="hideElement(this.id);
+                        showAllElementsWithClass('shareddata-type-edit-ui', 'initial'); 
+                        showAllElementsWithClass('shareddata-type-unset', 'inline-block')">
+                            + add/edit
+                        </button>
+                        {% with message_list_id="message-list-marked-as-type" %}
+                        {% include "core/reusable/message-list.html" %}
+                        {% endwith %}
+                    </td>
+                </tr>
+            </table>
+        </span>
+
+        <span id="related-pages-data" class="profile-info-section">
+            {% if tag.shareddata.linked_project or tag.shareddata.linked_creator %}
+            <div><b>Related Pages:</b></div>
+            <div>
+                {% if tag.shareddata.linked_project %}
+                <a href="{% url 'core:project_info' tag.pk %}">
+                    (Project Page) {{ tag.shareddata.main_name }}
+                </a>
+                <br>
+                {% endif %}
+                {% if tag.shareddata.linked_creator %}
+                <a href="{% url 'core:creator_info' tag.pk %}">
+                    (Creator Page) {{ tag.shareddata.main_name }}
+                </a>
+                <br>
+                {% endif %}
+            </div>
+            {% endif %}
+        </span>
+    </div>
+
+    <h3>When searching using this tag, also search for:</h3>
+    <ul class="tags-list tags-list-type-tags">
+        {% for related_tag in tag.related_search_tags.all %}
+        <li><a href="/tags/{{ related_tag.shareddata.pk }}">{{ related_tag.shareddata.main_name }}</a></li>
+        {% endfor %}
+    </ul>
+    
+
+    {# DEBUG: number of db hits #}
+    <p>db hits: {{ connection.queries|length }}</p>
+{% endblock main_content %}

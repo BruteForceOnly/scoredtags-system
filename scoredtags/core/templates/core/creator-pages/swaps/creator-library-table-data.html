@@ -1,0 +1,33 @@
+<div id="library-table-data" class="library-table-items">
+{% for item in matching_creators %}
+    {% if params.sortby == "date" %}
+    {% else %}
+        {% if item.is_first %}
+        <div class="item-grouping">{{ item.shareddata.main_name.0|capfirst }}</div>
+        {% endif %}
+    {% endif %}
+        <div class="item-data">
+            <a href="{% url 'core:creator_info' item.pk %}">{{ item.shareddata.main_name }}</a>
+        </div>
+{% endfor %}
+</div>
+
+
+
+
+{# OOB swap for updating navbar #}
+{% if update_library_table_navbar %}
+
+{% with named_url_str="core:creator_library" %}
+{% include "core/reusable/swaps/library-table-navbar.html" %}
+{% endwith %}
+
+{% endif %}
+
+
+
+
+{# DEBUG: number of db hits #}
+{% if test_db_hits %}
+<p id="test-db-hits" hx-swap-oob="true">db hits: {{ connection.queries|length }}</p>
+{% endif %}

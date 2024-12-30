@@ -1,0 +1,5 @@
+{% if eddata_vars.rdate_updated %}
+    {{ project.release_date }}
+{% elif eddata_vars.ludate_updated %}
+    {{ project.last_update_date }}
+{% endif %}

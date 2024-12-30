@@ -1,0 +1,205 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="htmx-config" content='{"useTemplateFragments":"true"}'>
+    <title>{% block title %}Base Title{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'core/favicon.ico' %}">
+    <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'core/page-style.css' %}">
+</head>
+<body>
+    <div class="center-everything">
+
+
+        <div class="grid-layout">
+            
+            <div class="grid-header-area">
+                <div class="header">
+                    <img src="{% static 'core/banner.jpg' %}">
+                </div>
+            </div>
+            
+            <div class="grid-top-navbar-area">
+                <div class="top-navbar">
+                    <div class="top-navbar-logo">
+                        <a href="/" id="top-navbar-logo-img"><img src="{% static 'core/logo.png' %}" width="40"></a>
+                        <a href="/" id="top-navbar-logo-text">ScoredTags</a>
+                    </div>
+                    <div class="top-navbar-link">
+                        <a href="{% url 'core:under_construction' %}">Top</a>
+                    </div>
+                    <div class="top-navbar-link">
+                        <a href="{% url 'core:under_construction' %}">
+                            Court
+                            <span class="notification-badge">7</span>
+                        </a>
+                        <div class="top-navbar-dropdown-content">
+                            <a href="{% url 'core:under_construction' %}">Records</a>
+                            <a href="{% url 'core:under_construction' %}">
+                                Jury Duty
+                                <span class="notification-badge">7</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="top-navbar-link">
+                        <a href="/edit-requests/">Edits</a>
+                        <div class="top-navbar-dropdown-content">
+                            <a href="{% url 'core:under_construction' %}">History</a>
+                            <a href="{% url 'core:under_construction' %}">Pending</a>
+                            <a href="{% url 'core:under_construction' %}">Landfill</a>
+                        </div>
+                    </div>
+                    <div class="top-navbar-link">
+                        <a href="{% url 'core:under_construction' %}">Advanced Search</a>
+                        <!-- <div class="top-navbar-dropdown"> -->
+                        <div class="top-navbar-dropdown-content">
+                            <a href="{% url 'core:project_library' %}">Projects</a>
+                            <a href="{% url 'core:creator_library' %}">Creators</a>
+                            <a href="{% url 'core:tag_library' %}">Tags</a>
+                        </div>
+                        <!-- </div> -->
+                    </div>
+                    <div class="top-navbar-search">
+                        <select id="searchbar-choice" onchange="setTopNavSearchResults(this)"
+                        hx-get="{% url 'core:search_results' %}" hx-swap="outerHTML"
+                        hx-target="#search-results-list-{{ top_search_vars.uid }}"
+                        hx-vals='js:{search: getTopNavSearchInputValue(), 
+                        searchtype: getCurrentlySelectedSearchType()}'>
+                            <option value="project">Projects</option>
+                            <option value="creator">Creators</option>
+                            <option value="tag">Tags</option>
+                        </select>
+                        {% include "core/reusable/search-select-ui.html" with vars=top_search_vars %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-main-area">
+                <div class="main-content">
+                    <div id="display-options">
+                        <div class="display-options-item">
+                            <p id="display-options-text">Show info that is:</p>
+                        </div>
+                        <div class="display-options-item" id="display-options-pending-approval">
+                            <input type="checkbox">
+                            <label>pending approval</label>
+                        </div>
+                        <div class="display-options-item" id="display-options-low-rated">
+                            <input type="checkbox">
+                            <label>low-rated</label>
+                        </div>
+                    </div>
+                    {% block main_content %}
+                    <h1>SCORED TAGS INDEX</h1>
+                    <p>This is filler data for the base page in core.</p>
+                    <p>This is filler data for the base page in core.</p>
+                    <p>This is filler data for the base page in core.</p>
+                    <p>This is filler data for the base page in core.</p>
+                    <p>This is filler data for the base page in core.</p>
+                    <p>This is filler data for the base page in core.</p>
+                    <p>This is filler data for the base page in core.</p>
+                    <p>This is filler data for the base page in core.</p>
+                    {% endblock %}
+                </div>
+
+                <div id="additional-content">
+                    <div id="additional-content-widgets">
+                        <button id="show-additional-content-button" onclick="showAdditionalContent()">
+                            show AC
+                        </button>
+                        <button id="test-widget">
+                            widget 2
+                        </button>
+                    </div>
+                    <div id="additional-content-window">
+                        <div class="additional-content-top-section">
+                            <p id="additional-content-top-text">
+                                TOP SECTION OF ADDITIONAL CONTENT<br>
+                                probably, only the list of changes needs overflow<br>
+                                and the submit button should stay outside for visibility
+                            </p>
+                            <button id="additional-content-submit">submit</button>
+                            <button id="hide-additional-content-button" onclick="hideAdditionalContent()">
+                                hide
+                            </button>
+                        </div>
+                        <div class="additional-content-bottom-section">
+                            <p id="test-db-hits">## text can be oob swapped with id=test-db-hits ##</p>
+                            <p>i am the additional content</p>
+                            <p>i am the additional content</p>
+                            <p>i am the additional content</p>
+                            <p>i am the additional content</p>
+                            <p>i am the additional content</p>
+                            <p>i am the additional content</p>
+                            <p>i am the additional content</p>
+                            <p>i am the additional content</p>
+                            <p>i am the additional content</p>
+                            <p>i am the additional content</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-side-area">
+                <div class="side-area-container">
+                    <div class="side-navbar">
+                        <div class="side-navbar-item">
+                            <a href="/">Home</a>
+                        </div>
+                        <div class="side-navbar-item">
+                            <a href="{% url 'core:under_construction' %}">News</a>
+                        </div>
+                        <div class="side-navbar-item">
+                            <a href="{% url 'core:under_construction' %}">Recently Added</a>
+                        </div>
+                        <div class="side-navbar-item">
+                            <a href="{% url 'core:under_construction' %}">Rules</a>
+                        </div>
+                        <div class="side-navbar-item">
+                            <a href="{% url 'core:under_construction' %}">About</a>
+                        </div>
+                    </div>
+                    <div class="side-filler">
+                        <p>Site Guidelines:</p>
+                        <ol>
+                            <li>
+                                Only create pages for content that you would recomend to others.
+                                We don't aim to have everything.
+                            </li>
+                            <li>
+                                Tags should be as specific as is useful to a user.
+                                But, if two tags are equivalent, consider adding another name to one of them instead of creating a new tag.
+                            </li>
+                            <li>
+                                No automated voting, please.
+                                It's one vote per user.
+                            </li>
+                            <li>
+                                Each page edit is intended to be manually reviewed by other users.
+                                If you're thinking of automating mass edits, please reconsider.
+                            </li>
+                            <li>
+                                Contact me if you want to search through the data in a way that is not supported on the site.
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="side-filler">
+                        <div style="text-align: center;">
+                            <img src="{% static 'core/logo.png' %}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    
+
+    </div>
+    {% csrf_token %}
+    <script src="{% static 'core/page-functionality.js' %}"></script>
+</body>
+</html>

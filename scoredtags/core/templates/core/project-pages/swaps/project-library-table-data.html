@@ -1,0 +1,55 @@
+{% load static %}
+
+
+<tbody id="library-table-data">
+{% for project in matching_items %}
+<tr>
+    <td><img src="{% static 'core/logo.png' %}"></td>
+    <td>
+        <a href="{% url 'core:project_info' project.pk %}">
+            {{ project.shareddata.main_name }}
+        </a>
+    </td>
+    <td>
+        <ul class="project-library-tags-list tags-list tags-list-type-tags">
+            {% for tag in project.tags.all %}
+            <li><a href="{% url 'core:tag_info' tag.pk %}">{{ tag.shareddata.main_name }}</a></li>
+            {% endfor %}
+        </ul>
+    </td>
+    <td>
+        <ul>
+            {% for creator in project.creators.all %}
+            <li>
+                <a href="{% url 'core:creator_info' creator.pk %}">
+                    {{ creator.shareddata.main_name }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </td>
+    <td>{{ project.release_date|date:"Y-m-d" }}</td>
+    <td>{{ project.last_update_date|date:"Y-m-d" }}</td>
+</tr>
+{% endfor %}
+</tbody>
+
+
+
+
+{# OOB swap to update navbar #}
+{% if update_library_table_navbar %}
+
+{% with named_url_str="core:project_library" %}
+{% include "core/reusable/swaps/library-table-navbar.html" %}
+{% endwith %}
+
+{% endif %}
+
+
+
+
+{# DEBUG: number of db hits #}
+{% if test_db_hits %}
+<p id="test-db-hits" hx-swap-oob="true">db hits: {{ connection.queries|length }}</p>
+{% endif %}

@@ -1,0 +1,9 @@
+{% for tag in tlist_vars.matching_tags %}
+<li>
+    <span class="tag-item-left">9.7</span>
+    <a href="{% url 'core:tag_info' tag.pk %}">{{ tag.shareddata.main_name }}</a>
+    <span class="tag-item-right">74|26</span>
+</li>
+{% empty %}
+<p><em>No tags currently added</em></p>
+{% endfor %}

@@ -1,0 +1,40 @@
+<div class="add-new-item-container">
+    <button id="add-new-item-button-{{ vars.uid }}" 
+    onclick="addNewItemButtonClicked('add-new-item-button-{{ vars.uid }}', '{{ vars.elt_to_show_id }}')"
+    {% if new_item_added is True %} style="display:none" {% endif %}>
+        {{ vars.button_text }}
+    </button>
+    <div id="add-new-item-input-wrapper-{{ vars.uid }}" class="add-new-item-input-wrapper"
+    {% if new_item_added is True %} style="display:flex" {% endif %}>
+        <div id="new-item-loading-indicator-{{ vars.uid }}" class="htmx-indicator loader-container">
+            <div class="loader"></div>
+        </div>
+        <input id="new-item-name-input-{{ vars.uid }}" class="new-item-name-input" maxlength="50" 
+        type="text" placeholder="{{ vars.input_placeholder }}" name="{{ vars.input_name }}">
+        <div class="new-item-input-buttons">
+            <button id="add-new-item-confirm-{{ vars.uid }}" hx-post="{{ vars.url_endpoint }}" 
+            hx-target="{{ vars.hx_swap_target }}" hx-include="[name={{ vars.input_name }}]" 
+            hx-vals="js:{csrfmiddlewaretoken: get_csrf_token(), search: getSearchParam('search'), 
+            sortby: getSearchParam('sortby'), page: getSearchParam('page')}" hx-swap="outerHTML"
+            hx-indicator="#new-item-loading-indicator-{{ vars.uid }}" hx-disabled-elt="this" 
+            hx-on::before-request="clearMessageList('message-list-{{ vars.uid }}');" 
+            hx-on::after-request="
+            if(event.detail.successful){
+                let newItemNameInputElt = document.getElementById('new-item-name-input-{{ vars.uid }}');
+                let addedItemName = newItemNameInputElt.value;
+                pushMessageListItem('message-list-{{ vars.uid }}', 'success', 'Submitted: '+addedItemName);
+                newItemNameInputElt.value='';
+            }"
+            class="confirm-button">
+                &#x2713;
+            </button>
+            <button class="cancel-button" 
+            onclick="newItemCancelButtonClicked(
+                'add-new-item-button-{{ vars.uid }}', 
+                'add-new-item-input-wrapper-{{ vars.uid }}'
+            )">
+                &#x2715;
+            </button>
+        </div>
+    </div>
+</div>

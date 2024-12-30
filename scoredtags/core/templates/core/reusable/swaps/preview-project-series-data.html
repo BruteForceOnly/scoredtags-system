@@ -1,0 +1,57 @@
+{% load static %}
+
+
+<div id="series-edit-preview" class="new-series-preview">
+
+    <p>Drag the project into the correct position.</p>
+    <table>
+        <tr id="draggable-series-project" class="draggable-series-project"
+        draggable="true" ondragstart="dragstartHandler(event)">
+            <td><img src="{% static 'core/logo.png' %}" draggable="false"></td>
+            <td>{{ project.shareddata.main_name }}</td>
+            <td>{{ project.creators.all.0.shareddata.main_name }}</td>
+            <td>{{ project.release_date }}</td>
+        </tr>
+    </table>
+
+    <table id="new-series-preview-data" class="new-series-preview-data">
+        <caption>{{ projectseries.name }}</caption>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Creator</th>
+            <th>Release Date</th>
+        </tr>
+        {% for entry in series_entries %}
+        {% if entry.order_num != entry.DEFAULT_ORDER_NUM %}
+        {% if entry.project != project %}
+        <tr class="series-order-target" data-rel-pos="before" data-rel-pk="{{ entry.pk }}"
+        ondrop="dropHandler(event, this)" ondragover="dragoverHandler(event)" 
+        ondragenter="dragenterHandler(event)" ondragleave="dragleaveHandler(event)">
+            <td>Before:</td>
+            <td>{{ entry.project.shareddata.main_name }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% endif %}
+        <tr id="series-entry-{{ entry.pk }}">
+            <td><img src="{% static 'core/logo.png' %}"></td>
+            <td>{{ entry.project.shareddata.main_name }}</td>
+            <td>{{ entry.project.creators.all.0 }}</td>
+            <td>{{ entry.project.release_date }}</td>
+        </tr>
+        {% if entry.project != project %}
+        <tr class="series-order-target" data-rel-pos="after" data-rel-pk="{{ entry.pk }}"
+        ondrop="dropHandler(event, this)" ondragover="dragoverHandler(event)" 
+        ondragenter="dragenterHandler(event)" ondragleave="dragleaveHandler(event)">
+            <td>After:</td>
+            <td>{{ entry.project.shareddata.main_name }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+    </table>
+
+</div>

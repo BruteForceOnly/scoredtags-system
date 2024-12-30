@@ -1,0 +1,855 @@
+:root {
+    --top-navbar-height: 50px;
+    --side-area-border-thickness: 2px;
+    --show-additional-content-button-height: 22px;
+}
+
+body {
+    margin: 0px;
+    background-color: #222222;
+    /*background-color: yellowgreen;*/
+}
+
+.center-everything {
+    /*border: 3px solid green;*/
+    margin: 0px auto;
+    max-width: 1000px;
+}
+
+.grid-layout {
+    /*background-color: aqua;*/
+    /*gap: 10px;*/
+    display: grid;
+    grid-template-columns: auto 200px;
+    grid-template-rows: auto var(--top-navbar-height) auto;
+    /*grid-template-rows: auto var(--top-navbar-height) 20px auto;*/
+}
+
+.grid-header-area {
+    /*background-color: lightblue;*/
+    grid-column: 1 / span 2;
+    grid-row: 1 / span 1;
+}
+
+.grid-top-navbar-area {
+    /*background-color: lightblue;*/
+    grid-column: 1 / span 2;
+    grid-row: 2 / span 1;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0px;
+    align-content: center;
+    z-index: 2;
+}
+
+.grid-main-area {
+    /*background-color: lightblue;*/
+    grid-column: 1 / span 1;
+    grid-row: 3 / span 1;
+    /* allows sidebar to cover the main content */
+    min-width: 0px;
+}
+
+.grid-side-area {
+    /*background-color: yellow;*/
+    grid-column: 2 / span 1;
+    grid-row: 3 / span 1;
+}
+
+.header img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 1000px;
+    max-height: 192px;
+}
+
+.top-navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: gray;
+    padding: 5px;
+    /*border: 2px solid black;*/
+}
+
+.top-navbar-logo {
+    /*background-color: orange;*/
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-grow: 4;
+}
+
+#top-navbar-logo-img {
+    display: flex;
+    align-items: center;
+}
+
+#top-navbar-logo-text {
+    /*background-color: red;*/
+    color: white;
+    text-decoration: none;
+    padding: 10px 10px;
+    padding-left: 0px;
+}
+
+.top-navbar-link {
+    /*background-color: orange;*/
+    padding: 10px 0px;
+    margin: 0px 5px;
+}
+
+.top-navbar-link a {
+    /*background-color: red;*/
+    color: black;
+    text-decoration: underline;
+    padding: 10px 10px;
+    white-space: nowrap;
+    /* position is relative to allow notification badges to be properly positioned */
+    position: relative;
+}
+
+.top-navbar-link a:hover {
+    background-color: darkgray;
+}
+
+.top-navbar-link .notification-badge {
+    position: absolute;
+    top: 0px;
+    right: 2px;
+    font-size: small;
+    background: red;
+    color: white;
+    border-radius: 30%;
+    padding: 2px 4px;
+}
+
+.top-navbar-dropdown-content {
+    /*background-color: lightgreen;*/
+    display: none;
+    position: absolute;
+    top: 40px;
+    background-color: #dddddd;
+}
+
+.top-navbar-link:hover .top-navbar-dropdown-content{
+    display: flex;
+    flex-direction: column;
+}
+
+.top-navbar-dropdown-content a:hover{
+    background-color: #bbbbbb;
+}
+
+.top-navbar-search {
+    /*background-color: orange;*/
+    flex-grow: 4;
+    display: flex;
+    justify-content: flex-end;
+    /*padding-right: 10px;*/
+}
+
+.main-content {
+    background-color: lightgray;
+    padding: 5px;
+    /* using align-content to remove the space from the parent grid item */
+    /* don't know why it works, but it does so... */
+    align-content: flex-start;
+    min-height: calc(100vh - var(--top-navbar-height) - 4px);
+}
+
+#display-options {
+    display: flex;
+    align-items: baseline;
+}
+
+.display-options-item {
+    margin-left: 5px;
+}
+
+#display-options-text {
+    margin: 0px;
+}
+
+#display-options-pending-approval:has( > input:checked){
+    border: 2px solid yellow;
+    background-color: beige;
+}
+
+#display-options-low-rated:has( > input:checked){
+    border: 2px solid red;
+    background-color: rosybrown;
+}
+
+#additional-content {
+    /*background-color: purple;*/
+    position: sticky;
+    bottom: 0px;
+}
+
+#additional-content-widgets {
+    /*background-color: #3498db;*/
+    display: flex;
+    justify-content: flex-end;
+}
+
+#show-additional-content-button {
+    background-color: green;
+    position: absolute;
+    top: calc(var(--show-additional-content-button-height) * -1);
+    right: 25px;
+}
+
+/* DELETE THIS if you don't need it; currently a placeholder for future widgets */
+#test-widget {
+    background-color: green;
+    position: absolute;
+    top: calc(var(--show-additional-content-button-height) * -1);
+    right: 90px;
+}
+
+#additional-content-window {
+    background-color: gray;
+    /*position: sticky;
+    bottom: 0;*/
+    border: 2px solid white;
+    height: 175px;
+    display: flex;
+    flex-direction: column;
+    display: none;
+    /* use this if you want to prevent it from touching the topnav  */
+    /*margin-top: 200px;*/
+}
+
+.additional-content-top-section {
+    background-color: blue;
+    height: 30%;
+    display: flex;
+    justify-content: space-between;
+}
+
+#additional-content-top-text {
+    background-color: green;
+    overflow: auto;
+}
+
+#additional-content-submit {
+    background-color: green;
+}
+
+#hide-additional-content-button {
+    background-color: green;
+}
+
+.additional-content-bottom-section {
+    /*background-color: blue;*/
+    height: 70%;
+    overflow: auto;
+}
+
+.side-area-container {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    position: -webkit-sticky;
+    position: sticky;
+    top: var(--top-navbar-height);
+    border: black solid var(--side-area-border-thickness);
+    background-color: gray;
+    /* have it be exactly the right height to avoid sidenav ever being shorter than main content */
+    /* which would cause it to get stuck at the bottom of viewport and block topnav when scrolling */
+    height: calc(100vh - var(--top-navbar-height) - (2*var(--side-area-border-thickness)));
+}
+
+.side-navbar {
+    /*background-color: blue;*/
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    min-height: 200px;
+}
+
+.side-navbar-item {
+    /*background-color: green;*/
+    padding: 5px 5px;
+}
+
+.side-navbar-item a {
+    text-decoration: underline;
+    color: black;
+    padding: 5px;
+}
+
+.side-navbar-item a:hover {
+    background-color: darkgray;
+}
+
+.side-filler {
+    /*background-color: blue;*/
+    min-height: 100px;
+    margin: 10px;
+    overflow: auto;
+}
+
+@media screen and (max-width: 850px) {
+    #top-navbar-logo-text { display: none; }
+}
+
+@media screen and (max-width: 700px) {
+    .grid-layout { grid-template-columns: auto; grid-template-rows: auto; }
+    .grid-top-navbar-area { grid-column: 1 / span 1; grid-row: 1 / span 1; align-content: start; }
+    .grid-header-area { grid-column: 1 / span 1; grid-row: 2 / span 1; margin-top: 1px;}
+    .grid-main-area { grid-column: 1 / span 1; grid-row: 3 / span 1; }
+    .grid-side-area { grid-column: 1 / span 1; grid-row: 4 / span 1; }
+    .side-navbar { align-items: flex-start; }
+    .top-navbar-search { display: none; }
+}
+
+/* ******************************************************************************************** */
+/* Main Content Universal */
+/* ******************************************************************************************** */
+.main-content > h1 {
+    border-bottom: 2px solid black;
+    word-wrap: break-word;
+    margin-bottom: 5px;
+}
+
+/* might need to move the error display stuff to an even more universal section */
+.error-display {
+    display: none;
+}
+
+.error-message {
+    background-color: red;
+    color: white;
+    margin: 0px;
+    word-wrap: break-word;
+}
+
+.success-message {
+    background-color: green;
+    color: white;
+    margin: 0px;
+    word-wrap: break-word;
+}
+
+.library-search-options {
+    font-size: 25px;
+}
+
+/* edit date ui */
+.edit-date-container {
+    display: inline-flex;
+}
+
+/* CONSIDER REWRITING OTHER UI CLASSES/ELEMENTS WITH THIS */
+.initially-no-display {
+    display: none;
+}
+
+/* add new item ui */
+
+.add-new-item-container {
+    display: inline-flex; /* change to flex if you want other elements to be above/below */
+    flex-direction: column;
+    max-width: 207px;
+}
+
+/* search-select version */
+.add-new-item-ss-container {
+    display: inline-flex; /* change to flex if you want other elements to be above/below */
+    flex-direction: column;
+    max-width: 207px;
+}
+
+.add-new-item-input-wrapper {
+    /*background-color: cornflowerblue;*/
+    display: none; /* when visible, should be flex */
+    flex-direction: row;
+    border: 1px solid gray;
+    justify-content: flex-end;
+    /* for position:absolute on the child .loader-container */
+    position: relative;
+}
+
+.add-new-item-input-wrapper:focus-within {
+    outline: 1px solid blue;
+}
+
+.new-item-name-input {
+    width: 100%;
+    border: none;
+}
+
+.new-item-name-input:focus {
+    outline: none;
+}
+
+.new-item-input-buttons {
+    /*background-color: purple;*/
+    display: flex;
+}
+
+/* confirm/cancel buttons may be more universal, so may need to move up */
+.confirm-button:hover, .confirm-button:active {
+    background-color: green;
+    color: white;
+}
+
+.cancel-button:hover, .cancel-button:active {
+    background-color: red;
+    color: white;
+}
+
+.action-result-message-list {
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.message-list-item {
+    border: 1px solid white;
+    animation: fade-in-from-below 1s;
+}
+
+@keyframes fade-in-from-below {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+}
+
+.message-list-item-button {
+    background-color: transparent;
+    border-color: white;
+    color: white;
+    opacity: 60%;
+}
+
+
+/* loader stuff */
+.loader-boundary-element {
+    position: relative;
+    display: inline-flex;
+}
+
+.loader-container {
+    background-color: rgba(0,0,255,0.5);
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+}
+
+.loader-container > img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    max-height: 100%;
+}
+
+.loader {
+    border: 10px solid #f3f3f3; /* Light grey */
+    border-top: 10px solid #3498db; /* Blue */
+    border-radius: 50%;
+    max-width: 20px;
+    max-height: 20px;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+}
+
+.loader-evil-focus {
+    border: 10px solid rgba(225, 225, 225, 0.7);
+    border-top: 10px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -150%;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+}
+
+.htmx-indicator {
+    display: none;
+}
+
+.htmx-request .htmx-indicator{
+    display: block;
+}
+
+.htmx-request.htmx-indicator{
+    display: block;
+}
+/* ******************************************************************************************** */
+/* ******************************************************************************************** */
+
+
+/* ******************************************************************************************** */
+/* TAG LIBRARY */
+/* ******************************************************************************************** */
+.library-quick-filter {
+    /*background-color: pink;*/
+    display: flex;
+    justify-content: flex-end;
+}
+
+#library-table-search {
+    /*background-color: red;*/
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+#library-table {
+    /*background-color: aqua;*/
+    border: white 3px solid;
+    padding: 5px;
+    /* position set in order to allow loading spinner's position: absolute to work */
+    position: relative;
+}
+
+.library-table-items {
+    /*background-color: greenyellow;*/
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-height: 500px;
+    align-content: flex-start;
+    overflow-x: auto;
+}
+
+.library-table-items > .item-grouping {
+    /*background-color: purple;*/
+    background-color: lightblue;
+    border-bottom: 2px solid black;
+    border-top: 2px solid black;
+    border-left: 2px solid black;
+    text-align: center;
+    width: 150px;
+    padding: 2px;
+}
+
+.library-table-items > .item-data {
+    /*background-color: orange;*/
+    background-color: white;
+    border-left: 2px solid black;
+    width: 150px;
+    padding: 2px;
+}
+
+.library-table-items > .item-data a {
+    word-wrap: break-word;
+}
+
+.library-table-items > .item-data a:hover {
+    background-color: turquoise;
+}
+
+.library-table-items > .add-new-item-container {
+    background-color: white;
+    width: 150px;
+    padding: 2px;
+    border-left: 2px solid black;
+}
+
+.library-table-items-next-sibling {
+    padding: 3px;
+}
+
+#library-table-navbar {
+    /*background-color: yellow;*/
+    background-color: mediumaquamarine;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+}
+
+.library-table-navbar-item {
+    margin: 4px;
+}
+/* ******************************************************************************************** */
+/* ******************************************************************************************** */
+
+
+/* ******************************************************************************************** */
+/* INFO PAGE GENERAL (-info pages) */
+/* ******************************************************************************************** */
+.inline-add-altname-button-wrapper {
+    display: inline-block;
+}
+
+.altnames-list-data {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2; /* doesn't work, but put it in to stop vscode from complaining */
+    -webkit-box-orient: vertical;
+}
+
+#shareddata-type-data {
+    display: inline-block;
+}
+
+.shareddata-type-edit-ui {
+    display: none;
+}
+
+.shareddata-type-edit-ui-btn-container {
+    display: inline-flex;
+}
+
+.profile-info {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.profile-info img {
+    border: 1px solid black;
+    object-fit: contain;
+    height: 150px;
+    width: 150px;
+}
+
+.profile-info-section {
+    border-left: 1px solid black;
+    padding-left: 10px;
+    margin-left: 10px;
+}
+/* ******************************************************************************************** */
+/* ******************************************************************************************** */
+
+/* ******************************************************************************************** */
+/* PROJECT INFO PAGE */
+/* ******************************************************************************************** */
+/* might not need this if you decide to make edit buttons always visible */
+.basic-info-edit-button {
+    opacity: 0;
+}
+
+.editable:hover .basic-info-edit-button {
+    opacity: 1;
+}
+/* ********************************************************************* */
+
+.tabs-container {
+    border: white 4px solid;
+}
+
+.tabs {
+    display: flex;
+    background-color: #AAA;
+}
+
+.tabs button {
+    background-color: inherit;
+    border: none;
+    padding: 20px;
+    margin: 0px;
+}
+
+.tabs button:hover {
+    background-color: #999;
+    text-decoration: underline;
+}
+
+.tabs button.active-tab {
+    background-color: #777;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.tab-content {
+    display: none;
+    padding: 5px;
+}
+
+.tab-content.active-tab {
+    display: block;
+}
+
+.tags-list {
+    padding: 0px;
+    margin: 0px;
+}
+
+.tags-list > div > li, .tags-list > li{
+    display: inline-block;
+    word-break: keep-all;
+    border: 2px black solid;
+    border-radius: 5px;
+    background-color: white;
+    margin-right: 0px;
+    margin-bottom: 2px;
+    padding: 2px;
+}
+
+.tags-list.tags-list-type-tags li {
+    border-color: cornflowerblue;
+}
+
+.tags-list.tags-list-type-creators li {
+    border-color: coral;
+}
+
+.tags-list.tags-list-type-projects li {
+    border-color: mediumseagreen;
+}
+
+/* for tags-list single items */
+.tags-list .tags-list-item-tag {
+    border-color: cornflowerblue;
+}
+
+.tags-list .tags-list-item-creator {
+    border-color: coral;
+}
+
+.tags-list .tags-list-item-project {
+    border-color: mediumseagreen;
+}
+
+.tag-item-left {
+    border-right: 1px solid cornflowerblue;
+    padding: 2px;
+}
+
+.tag-item-right {
+    border-left: 1px solid cornflowerblue;
+    padding: 2px;
+}
+
+.editable-container {
+    position: relative;
+}
+
+.editable-container:hover .editable-ui{
+    background-color: rgba(0,0,255,0.5);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.editable-ui {
+    display: none; /* flex on hover */
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+/* search select stuff */
+.search-select-container {
+    position: relative;
+}
+
+.search-select-container input:focus + .search-results-dropdown, .search-results-dropdown:hover {
+    display: block; /*NEED TO TEST THAT THIS WORKS ON MOBILE; aka, is it clickable/tapable? */
+}
+
+.search-results-dropdown {
+    display: none; /*NEED TO TEST THAT THIS WORKS ON MOBILE*/
+    position: absolute;
+    background-color: white;
+    width: 100%;
+    z-index: 1; /* prevents message-list-item close button appearing over search results */
+}
+
+.search-results-dropdown > ul {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.search-results-dropdown > ul > li{
+    padding: 5px;
+    word-wrap: break-word;
+}
+
+.search-results-dropdown > ul > li:hover{
+    background-color: aquamarine;
+}
+
+.new-item-name-input {
+    background-color: aquamarine;
+}
+
+/* series drag and drop, tables, etc. */
+.new-series-preview {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+.new-series-preview table {
+    border-collapse: collapse;
+}
+
+.draggable-series-project {
+    border: 2px solid white;
+    /* may need to add the webkit stuff to make it compatible for more browsers */
+    user-select: none;
+}
+
+.series-order-target {
+    border: 1px dashed black;
+    font-weight: bold;
+}
+
+.new-series-preview-data{
+    /* disable dragging to prevent confusion */
+    pointer-events: none; /* this is disabling more than it needs to but...it's simple */
+    user-select: none;
+}
+
+/* defined here to overwrite effects from #new-series-preview-data above */
+.series-order-target, .draggable-series-project {
+    pointer-events: all;
+}
+
+.series-table-data {
+    border: 1px solid black;
+}
+
+.series-table-unknown-order-divider {
+    border-top: 1px solid black;
+}
+/* ******************************************************************************************** */
+/* ******************************************************************************************** */
+
+
+/* ******************************************************************************************** */
+/* PROJECT LIBRARY PAGE */
+/* ******************************************************************************************** */
+.project-library-table img{
+    object-fit: contain;
+    width: 40px;
+    height: 40px;
+}
+
+.project-library-tags-list {
+    text-wrap: nowrap;
+    max-width: 200px;
+    overflow-x: auto;
+}
+/* ******************************************************************************************** */
+/* ******************************************************************************************** */

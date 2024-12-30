@@ -1,0 +1,74 @@
+{% if sdtype_data_vars.sdtdata_is_oob %}
+<ul id="shareddata-type-data" class="tags-list" hx-swap-oob="true">
+{% else %}
+<ul id="shareddata-type-data" class="tags-list">
+{% endif %}
+    {% if sdtype_data_vars.sdata.linked_project %}
+    <li class="tags-list-item-project">
+        <input type="checkbox" class="shareddata-type-edit-ui" name="pcheck" checked>
+    {% else %}
+    <li class="tags-list-item-project shareddata-type-unset" style="display:none">
+        <input type="checkbox" class="shareddata-type-edit-ui" name="pcheck">
+    {% endif %}
+        Project
+    </li>
+    {% if sdtype_data_vars.sdata.linked_creator %}
+    <li class="tags-list-item-creator">
+        <input type="checkbox" class="shareddata-type-edit-ui" name="ccheck" checked>
+    {% else %}
+    <li class="tags-list-item-creator shareddata-type-unset" style="display:none">
+        <input type="checkbox" class="shareddata-type-edit-ui" name="ccheck">
+    {% endif %}
+        Creator
+    </li>
+    {% if sdtype_data_vars.sdata.linked_tag %}
+    <li class="tags-list-item-tag">
+        <input type="checkbox" class="shareddata-type-edit-ui" name="tcheck" checked>
+    {% else %}
+    <li class="tags-list-item-tag shareddata-type-unset" style="display:none">
+        <input type="checkbox" class="shareddata-type-edit-ui" name="tcheck">
+    {% endif %}
+        Tag
+    </li>
+</ul>
+
+
+{# OOB SWAPS #}
+{% if sdtype_data_vars.page_updated %}
+
+{# related pages #}
+<span id="related-pages-data" class="profile-info-section" hx-swap-oob="true">
+    {# the span will only have content if at least 1 related page exists #}
+    {% if sdtype_data_vars.sdata.linked_project and sdtype_data_vars.page_type != "project" or sdtype_data_vars.sdata.linked_creator and sdtype_data_vars.page_type != "creator" or sdtype_data_vars.sdata.linked_tag and sdtype_data_vars.page_type != "tag" %}
+    <div><b>Related Pages:</b></div>
+    <div>
+        {% if sdtype_data_vars.sdata.linked_project and sdtype_data_vars.page_type != "project" %}
+        <a href="{% url 'core:project_info' sdtype_data_vars.sdata.pk %}">
+            (Project Page) {{ sdtype_data_vars.sdata.main_name }}
+        </a>
+        <br>
+        {% endif %}
+        {% if sdtype_data_vars.sdata.linked_creator and sdtype_data_vars.page_type != "creator" %}
+        <a href="{% url 'core:creator_info' sdtype_data_vars.sdata.pk %}">
+            (Creator Page) {{ sdtype_data_vars.sdata.main_name }}
+        </a>
+        <br>
+        {% endif %}
+        {% if sdtype_data_vars.sdata.linked_tag and sdtype_data_vars.page_type != "tag" %}
+        <a href="{% url 'core:tag_info' sdtype_data_vars.sdata.pk %}">
+            (Tag Page) {{ sdtype_data_vars.sdata.main_name }}
+        </a>
+        <br>
+        {% endif %}
+        {% if sdtype_data_vars.page_type == "project" and not sdtype_data_vars.sdata.linked_creator and not sdtype_data_vars.sdata.linked_tag %}
+        <em>No related pages</em>
+        {% elif sdtype_data_vars.page_type == "creator" and not sdtype_data_vars.sdata.linked_project and not sdtype_data_vars.sdata.linked_tag %}
+        <em>No related pages</em>
+        {% elif sdtype_data_vars.page_type == "tag" and not sdtype_data_vars.sdata.linked_creator and not sdtype_data_vars.sdata.linked_project %}
+        <em>No related pages</em>
+        {% endif %}
+    </div>
+    {% endif %}
+</span>
+
+{% endif %}

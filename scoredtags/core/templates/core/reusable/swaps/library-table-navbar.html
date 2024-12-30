@@ -1,0 +1,55 @@
+<div id="library-table-navbar" hx-swap-oob="true">
+    <div class="library-table-navbar-item">
+        {% if relative_page_numbers.prev_page >= search_page_numbers|first %}
+        <button type="button" hx-get="{% url named_url_str %}" hx-target="#library-table-data" 
+        hx-vals='js:{page: "{{ relative_page_numbers.prev_page }}", search: getSearchParam("search"), 
+        sortby: getSearchParam("sortby")}' hx-push-url="true" hx-swap="outerHTML"
+        hx-on::before-request="hideErrorElement('library-paging-errors')" 
+        hx-indicator="#table-loading-indicator" id="library-prev-page-button">
+            <- prev
+        </button>
+        {% endif %}
+    </div>
+    {% for number in search_page_numbers %}
+        {% if number == relative_page_numbers.current_page %}
+        <div class="library-table-navbar-item">
+            <span>{{ number }}</span>
+        </div>
+        {% elif number != "..." %}
+        <div class="library-table-navbar-item">
+            <a href="javascript:void(0)" hx-get="{% url named_url_str %}" hx-push-url="true" 
+            hx-vals='js:{search: getSearchParam("search"), sortby: getSearchParam("sortby"), 
+            page: "{{ number }}"}' hx-swap="outerHTML" hx-target="#library-table-data" 
+            hx-on::before-request="hideErrorElement('library-paging-errors')"
+            hx-indicator="#table-loading-indicator" class="library-table-page-link">
+                {{ number }}
+            </a>
+        </div>
+        {% else %}
+        <div class="library-table-navbar-item">
+            <span>{{ number }}</span>
+        </div>
+        {% endif %}
+    {% endfor %}
+    <div class="library-table-navbar-item">
+    {% if relative_page_numbers.next_page <= search_page_numbers|last %}
+        <button id="library-next-page-button" hx-get="{% url named_url_str %}" 
+        hx-vals='js:{page: "{{ relative_page_numbers.next_page }}", search: getSearchParam("search"), 
+        sortby: getSearchParam("sortby")}' hx-push-url="true" hx-swap="outerHTML" 
+        hx-target="#library-table-data" hx-indicator="#table-loading-indicator" 
+        hx-on::before-request="hideErrorElement('library-paging-errors')">
+            next ->
+        </button>
+    {% endif %}
+    </div>
+    <div class="library-table-navbar-item">
+        <div id="go-to-page">
+            <label>Go To:</label>
+            <input id="go-to-input" name="page" type="text" size="2" hx-trigger="keyup[key=='Enter']" 
+            hx-target="#library-table-data" hx-swap="outerHTML" hx-push-url="true" 
+            hx-vals='js:{search: getSearchParam("search"), sortby: getSearchParam("sortby")}' 
+            hx-on::before-request="hideErrorElement('library-paging-errors')" 
+            hx-indicator="#table-loading-indicator" hx-get="{% url named_url_str %}">
+        </div>
+    </div>
+</div>

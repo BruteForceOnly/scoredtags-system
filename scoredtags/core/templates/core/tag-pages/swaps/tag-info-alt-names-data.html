@@ -1,0 +1,6 @@
+<ul id="tag-alt-names-list" class="alt-names-list">
+    {% for altname in tag.shareddata.dataname_set.all %}
+    <li>{{ altname.name }}</li>
+    {% endfor %}
+    <li>{% include "core/reusable/add-new-item-ui.html" with vars=add_button_vars_1 %}</li>
+</ul>

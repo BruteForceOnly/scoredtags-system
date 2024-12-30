@@ -1,0 +1,35 @@
+<ul id="{{ list_id }}">
+    {% if results_type == "additemoption" and item_type == "tag" or results_type == "additemoption" and item_type == "creator" or results_type == "additemoption" and item_type == "project" %}
+        {% for item in matching_items %}
+        <li onclick="relatedUIShowHide('{{ elt_to_show_id }}', 'flex', '{{ elt_to_hide_id }}'); 
+        handleSearchSelectResultClicked(this, '{{ uid }}', '{{ item.pk }}')">
+            {{ item.shareddata.main_name }}
+        </li>
+        {% endfor %}
+    {% elif results_type == "additemoption" and item_type == "projectseries" %}
+        {% for item in matching_items %}
+        <li onclick="relatedUIShowHide('{{ elt_to_show_id }}', 'flex', '{{ elt_to_hide_id }}'); 
+        handleSearchSelectResultClicked(this, '{{ uid }}', '{{ item.pk }}')"
+        hx-get="{% url 'core:project_info_preview_pseries' project_id item.pk %}" 
+        hx-target="#series-edit-preview" hx-swap="outerHTML">
+            {{ item.name }}
+        </li>
+        {% endfor %}
+    {% elif item_type == "tag" or item_type == "creator" or item_type == "project" %}
+        {% for item in matching_items %}
+        <li>
+            {% if go_to_page == True %}
+            <a href="/{{ item_type }}s/{{ item.pk }}/">{{ item.shareddata.main_name }}</a>
+            {% else %}
+            {{ item.shareddata.main_name }}
+            {% endif %}
+        </li>
+        {% endfor %}
+    {% endif %}
+    {% if last_list_item %}
+        <li onclick="relatedUIShowHide('{{ elt_to_show_id }}', 'flex', '{{ elt_to_hide_id }}'); 
+        handleSearchSelectCreateNewItemClicked('{{ uid }}')">
+            <em>{{ last_list_item }}</em>
+        </li>
+    {% endif %}
+</ul>

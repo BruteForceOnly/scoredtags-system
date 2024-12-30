@@ -1,0 +1,7 @@
+{{ project.overall_score|floatformat:2 }}
+
+
+{# OOB swap for success message #}
+<span hx-swap-oob="beforeend:#message-list-oscore">
+    {% include "core/reusable/message-list-item.html" with msg_txt="Score Submitted" %}
+</span>
