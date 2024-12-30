@@ -41,6 +41,14 @@ While inside this container, run: `python manage.py collectstatc`
 In the same container, also run: `python manage.py migrate`  
 Things should now be fully set up.
 
+### CRLF/LF Problems
+You may encounter errors related to line endings.  
+Some of the files subject to this problem are:
+- /cron/monthly-pepper-generation
+- /cron/init.sh
+
+To fix this, change the line endings of the affected files to LF.
+
 ### ALLOWED_HOSTS
 If you want to be able to access the system outside of localhost, you will need to change ALLOWED_HOSTS in settings.py  
 There may be other settings/config files you want to change, depending on your setup.
